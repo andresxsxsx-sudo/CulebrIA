@@ -1,0 +1,44 @@
+﻿fixture_id,league_id,country,competition,home,away,date,quality_score,grade,market_status,fixture_stats,standings,lineups,injuries,odds_signal
+1492325,71,Brazil,Serie A,Flamengo,Vitoria,2026-08-10T00:30:00+02:00,100,A,CORE,True,True,True,True,True
+1612525,299,Venezuela,Primera División,Metropolitanos FC,UCV,2026-08-10T00:30:00+02:00,55,C,DESCARTADO,False,True,True,False,True
+1508501,254,USA,NWSL Women,Chicago Red Stars W,Bay FC W,2026-08-10T01:00:00+02:00,85,A,CORE,True,True,True,False,True
+1559606,339,Guatemala,Liga Nacional,Municipal,Cobán Imperial,2026-08-10T01:00:00+02:00,35,D,DESCARTADO,False,False,True,False,True
+1549720,239,Colombia,Primera A,Jaguares,Once Caldas,2026-08-10T01:10:00+02:00,85,A,CORE,True,True,True,False,True
+1493047,128,Argentina,Liga Profesional Argentina,Argentinos JRS,Racing Club,2026-08-10T01:15:00+02:00,85,A,CORE,True,True,True,False,True
+1583733,304,Panama,Liga Panameña de Fútbol,Sporting San Miguelito,Alianza FC,2026-08-10T01:15:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1592942,234,Honduras,Liga Nacional,CD Motagua,Estrella Roja,2026-08-10T01:15:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1530138,772,World,Leagues Cup,Cruz Azul,New York City FC,2026-08-10T01:30:00+02:00,75,B,DESCARTADO,True,False,True,False,True
+1530140,772,World,Leagues Cup,Philadelphia Union,Necaxa,2026-08-10T01:30:00+02:00,75,B,DESCARTADO,True,False,True,False,True
+1563082,344,Bolivia,Primera División,Oriente Petrolero,Universitario de Vinto,2026-08-10T01:30:00+02:00,85,A,CORE,True,True,True,False,True
+1600563,370,El-Salvador,Primera Division,FAS,Atletico Balboa,2026-08-10T01:30:00+02:00,30,D,DESCARTADO,False,True,False,False,True
+1505489,265,Chile,Primera División,Universidad de Chile,Palestino,2026-08-10T02:00:00+02:00,85,A,CORE,True,True,True,False,True
+1519444,242,Ecuador,Liga Pro,Guayaquil City FC,Emelec,2026-08-10T02:00:00+02:00,85,A,CORE,True,True,True,False,True
+1530136,772,World,Leagues Cup,Chicago Fire,Santos Laguna,2026-08-10T02:00:00+02:00,75,B,DESCARTADO,True,False,True,False,True
+1530139,772,World,Leagues Cup,Nashville SC,Atletico San Luis,2026-08-10T02:00:00+02:00,75,B,DESCARTADO,True,False,True,False,True
+1551658,162,Costa-Rica,Primera División,CS Herediano,LD Alajuelense,2026-08-10T02:00:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1513278,909,USA,MLS Next Pro,Austin II,Sporting KC II,2026-08-10T02:30:00+02:00,55,C,DESCARTADO,False,True,True,False,True
+1508502,254,USA,NWSL Women,Seattle Reign FC W,Angel City W,2026-08-10T03:00:00+02:00,85,A,CORE,True,True,True,False,True
+1530135,772,World,Leagues Cup,Austin,Puebla,2026-08-10T03:00:00+02:00,75,B,DESCARTADO,True,False,True,False,True
+1549715,239,Colombia,Primera A,America de Cali,Atletico Nacional,2026-08-10T03:15:00+02:00,85,A,CORE,True,True,True,False,True
+1592943,234,Honduras,Liga Nacional,Atletico Independiente,Atlético Choloma,2026-08-10T03:30:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1530141,772,World,Leagues Cup,San Diego,Club Tijuana,2026-08-10T04:00:00+02:00,75,B,DESCARTADO,True,False,True,False,True
+1530137,772,World,Leagues Cup,Club America,Portland Timbers,2026-08-10T04:15:00+02:00,75,B,DESCARTADO,True,False,True,False,True
+1584364,1229,Peru,Liga Women,FBC Melgar W,Defensores W,2026-08-10T17:00:00+02:00,20,D,DESCARTADO,False,False,False,False,True
+1565210,283,Romania,Liga I,FC Botosani,Corvinul Hunedoara,2026-08-10T17:30:00+02:00,85,A,CORE,True,True,True,False,True
+1600673,711,Chile,Segunda División,Real San Joaquín,Santiago Morning,2026-08-10T18:00:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1498704,129,Argentina,Primera Nacional,All Boys,Central Norte,2026-08-10T20:00:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1498713,129,Argentina,Primera Nacional,Gimnasia Jujuy,Tristan Suarez,2026-08-10T20:00:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1565207,283,Romania,Liga I,CFR 1907 Cluj,Universitatea Cluj,2026-08-10T20:30:00+02:00,85,A,CORE,True,True,True,False,True
+1565212,283,Romania,Liga I,Sepsi OSK Sfantu Gheorghe,FCSB,2026-08-10T20:30:00+02:00,85,A,CORE,True,True,True,False,True
+1585694,204,Turkey,1. Lig,Pendikspor,Batman Petrolspor,2026-08-10T20:30:00+02:00,85,A,CORE,True,True,True,False,True
+1513267,909,USA,MLS Next Pro,Chicago Fire II,Toronto II,2026-08-10T21:00:00+02:00,55,C,DESCARTADO,False,True,True,False,True
+1519447,242,Ecuador,Liga Pro,Tecnico Universitario,Mushuc Runa SC,2026-08-10T21:00:00+02:00,85,A,CORE,True,True,True,False,True
+1612455,269,Uruguay,Segunda División,Rentistas,Plaza Colonia,2026-08-10T21:00:00+02:00,55,C,DESCARTADO,False,True,True,False,True
+1508831,164,Iceland,Úrvalsdeild,Fram Reykjavik,KR Reykjavik,2026-08-10T21:15:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1575453,94,Portugal,Primeira Liga,Santa Clara,Nacional,2026-08-10T21:15:00+02:00,85,A,CORE,True,True,True,False,True
+1612526,299,Venezuela,Primera División,Rayo Zuliano,Estudiantes de Merida FC,2026-08-10T21:30:00+02:00,55,C,DESCARTADO,False,True,True,False,True
+1525756,712,Colombia,Liga Femenina,Atlético Bucaramanga W,Once Caldas W,2026-08-10T22:00:00+02:00,35,D,DESCARTADO,False,False,True,False,True
+1522431,74,Brazil,Brasileiro Women,Botafogo W,Fluminense W,2026-08-10T23:00:00+02:00,45,D,DESCARTADO,False,True,True,False,True
+1549713,239,Colombia,Primera A,Águilas Doradas,Llaneros,2026-08-10T23:00:00+02:00,85,A,CORE,True,True,True,False,True
+1519446,242,Ecuador,Liga Pro,Libertad,Universidad Catolica,2026-08-10T23:30:00+02:00,85,A,CORE,True,True,True,False,True
+1610935,252,Paraguay,Division Profesional - Clausura,Libertad Asuncion,Sportivo Trinidense,2026-08-10T23:30:00+02:00,85,A,CORE,True,True,True,False,True

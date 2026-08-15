@@ -1,0 +1,3 @@
+﻿fixture_id,competition,fdorg_code,api_home,api_away,api_date,fdorg_home,fdorg_away,fdorg_date,fdorg_status,similarity,orientation,validation
+1492325,Serie A,BSA,Flamengo,Vitoria,2026-08-10T00:30:00+02:00,CR Flamengo,EC Vitória,2026-08-09T22:30:00Z,TIMED,0.96,NORMAL,VERIFICADO
+1575453,Primeira Liga,PPL,Santa Clara,Nacional,2026-08-10T21:15:00+02:00,CD Santa Clara,CD Nacional,2026-08-10T19:15:00Z,TIMED,0.96,NORMAL,VERIFICADO

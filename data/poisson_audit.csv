@@ -1,0 +1,7 @@
+﻿fixture_id,competition,home,away,status,errors,warnings,lambda_home,lambda_away,lambda_total,one_x_two_total,dnb_total,home_win_pct,draw_pct,away_win_pct,over15_pct,over25_pct,under35_pct,btts_pct
+1492320,BSA,EC Bahia,CR Vasco da Gama,OK,,,1.813,0.983,2.796,100.0,100.0,56.86,22.91,20.23,76.83,52.96,69.28,52.37
+1492327,BSA,SE Palmeiras,SC Internacional,OK,,,1.722,0.829,2.551,100.0,100.0,58.58,23.6,17.82,72.31,46.93,74.65,46.29
+1575450,PPL,Gil Vicente FC,Rio Ave FC,OK,,,1.908,0.959,2.867,100.0,100.0,59.57,21.94,18.49,78.02,54.65,67.69,52.53
+1575452,PPL,Moreirense FC,Sporting Clube de Braga,OK,,,0.923,1.312,2.235,100.0,100.0,26.26,28.15,45.59,65.38,38.66,81.25,44.03
+1492322,BSA,RB Bragantino,SC Corinthians Paulista,OK,,,1.351,0.91,2.261,100.0,100.0,47.0,27.76,25.24,66.01,39.36,80.72,44.28
+1492329,BSA,Santos FC,CA Paranaense,OK,,,1.401,1.126,2.527,100.01,100.0,43.24,26.53,30.24,71.82,46.31,75.18,50.92

@@ -1,0 +1,43 @@
+﻿Pais,Competicion,League_ID,Temporada_partido,Temporada_cobertura,Partidos_futuros,Puntuacion,Nivel,Estadisticas_partido,Estadisticas_jugador,Alineaciones,Lesiones,Clasificacion,Jugadores,Eventos,Predicciones,Odds
+Brazil,Serie A,71,2026,2026,4,100,A,SI,SI,SI,SI,SI,SI,SI,SI,SI
+Brazil,Serie B,72,2026,2026,3,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Portugal,Primeira Liga,94,2026,2026,3,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Turkey,1. Lig,204,2026,2026,2,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Chile,Primera División,265,2026,2026,2,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Serbia,Super Liga,286,2026,2026,2,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Bolivia,Primera División,344,2026,2026,2,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Paraguay,Division Profesional - Clausura,252,2026,2026,2,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Argentina,Liga Profesional Argentina,128,2026,2026,2,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Romania,Liga I,283,2026,2026,1,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Croatia,HNL,210,2026,2026,1,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+USA,NWSL Women,254,2026,2026,1,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Peru,Primera División,281,2026,2026,1,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Ecuador,Liga Pro,242,2026,2026,1,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+Colombia,Primera A,239,2026,2026,1,85,A,SI,SI,SI,NO,SI,SI,SI,SI,SI
+World,Leagues Cup,772,2026,2026,1,75,B,SI,SI,SI,NO,NO,SI,SI,SI,SI
+Venezuela,Segunda División,300,2026,2026,6,55,C,NO,NO,SI,NO,SI,SI,SI,SI,SI
+Brazil,Serie C,75,2026,2026,4,55,C,NO,NO,SI,NO,SI,SI,SI,SI,SI
+Venezuela,Primera División,299,2026,2026,3,55,C,NO,NO,SI,NO,SI,SI,SI,SI,SI
+Uruguay,Segunda División,269,2026,2026,1,55,C,NO,NO,SI,NO,SI,SI,SI,SI,SI
+USA,MLS Next Pro,909,2026,2026,1,55,C,NO,NO,SI,NO,SI,SI,SI,SI,SI
+Uruguay,Primera División,268,2026,2026,1,55,C,NO,NO,SI,NO,SI,SI,SI,SI,SI
+Argentina,Primera Nacional,129,2026,2026,7,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Brazil,Brasileiro Women,74,2026,2026,2,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Chile,Primera B,266,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Brazil,Goiano - 2,1030,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Chile,Segunda División,711,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+World,Africa Cup of Nations - Women,922,2025,2025,1,45,D,NO,NO,SI,NO,SI,SI,SI,SI,NO
+Iceland,Úrvalsdeild,164,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Peru,Segunda División,282,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+USA,USL Championship,255,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Costa-Rica,Primera División,162,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Panama,Liga Panameña de Fútbol,304,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Honduras,Liga Nacional,234,2026,2026,1,45,D,NO,NO,SI,NO,SI,NO,SI,SI,SI
+Colombia,Liga Femenina,712,2026,2026,3,35,D,NO,NO,SI,NO,NO,NO,SI,SI,SI
+Italy,Coppa Italia,137,2026,2026,1,35,D,NO,NO,SI,NO,NO,NO,SI,SI,SI
+Guatemala,Liga Nacional,339,2026,2026,1,35,D,NO,NO,SI,NO,NO,NO,SI,SI,SI
+Bosnia,Premijer Liga,315,2026,2026,1,30,D,NO,NO,NO,NO,SI,NO,SI,SI,SI
+Costa-Rica,Liga de Ascenso,163,2026,2026,1,30,D,NO,NO,NO,NO,SI,NO,SI,SI,SI
+El-Salvador,Primera Division,370,2026,2026,1,30,D,NO,NO,NO,NO,SI,NO,SI,SI,SI
+Peru,Liga Women,1229,2026,2026,1,20,D,NO,NO,NO,NO,NO,NO,SI,SI,SI
+Brazil,Paranaense - 3,1138,2026,2026,2,15,D,NO,NO,NO,NO,SI,NO,NO,SI,NO

@@ -1,0 +1,8 @@
+﻿fixture_id,competition,home,away,home_history,home_last5,home_last10,home_venue,away_history,away_last5,away_last10,away_venue,basic_sample_ok,venue_sample_ok,data_leakage,model_status
+1492320,BSA,EC Bahia,CR Vasco da Gama,21,5,10,11,20,5,10,9,True,True,False,LISTO
+1492327,BSA,SE Palmeiras,SC Internacional,21,5,10,10,21,5,10,10,True,True,False,LISTO
+1575446,PPL,Sport Lisboa e Benfica,Académico de Viseu FC,34,5,10,17,0,0,0,0,False,False,False,MUESTRA_INSUFICIENTE
+1575450,PPL,Gil Vicente FC,Rio Ave FC,34,5,10,17,34,5,10,17,True,True,False,LISTO
+1575452,PPL,Moreirense FC,Sporting Clube de Braga,34,5,10,17,34,5,10,17,True,True,False,LISTO
+1492322,BSA,RB Bragantino,SC Corinthians Paulista,20,5,10,10,21,5,10,10,True,True,False,LISTO
+1492329,BSA,Santos FC,CA Paranaense,20,5,10,11,21,5,10,10,True,True,False,LISTO

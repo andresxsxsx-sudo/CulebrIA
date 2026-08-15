@@ -1,0 +1,127 @@
+{
+  "fetched_at": "2026-08-09T20:41:15.281129+00:00",
+  "competition": "BSA",
+  "sport_key": "soccer_brazil_campeonato",
+  "events": [
+    {
+      "id": "4204e2b2947477d251548f1c02e632d3",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-09T19:00:00Z",
+      "home_team": "Bahia",
+      "away_team": "Vasco da Gama"
+    },
+    {
+      "id": "080179043efe768aaae54129824d42ac",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-09T19:00:00Z",
+      "home_team": "Palmeiras",
+      "away_team": "Internacional"
+    },
+    {
+      "id": "d098481aaf9324107f137d32b6e1176e",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-09T21:30:00Z",
+      "home_team": "Santos",
+      "away_team": "Atletico Paranaense"
+    },
+    {
+      "id": "44d6d18dd7c62426e6e3a904acd3ae7c",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-09T21:30:00Z",
+      "home_team": "Bragantino-SP",
+      "away_team": "Corinthians"
+    },
+    {
+      "id": "58fe33bbb4dcf84c7126831d95d395d9",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-09T22:30:00Z",
+      "home_team": "Flamengo",
+      "away_team": "Vitoria"
+    },
+    {
+      "id": "84fb000d5cc73f12db07f071bbc5276d",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-15T19:30:00Z",
+      "home_team": "Fluminense",
+      "away_team": "Palmeiras"
+    },
+    {
+      "id": "f53ddf340b31319bc0862cf2413791cc",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-15T21:30:00Z",
+      "home_team": "Atletico Paranaense",
+      "away_team": "Bragantino-SP"
+    },
+    {
+      "id": "2a2b9a6d8220a6928aa3c3ee2580f93f",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-16T00:00:00Z",
+      "home_team": "Sao Paulo",
+      "away_team": "Coritiba"
+    },
+    {
+      "id": "23d2a9b2d78fa7d678c4c6f5b7f90dd9",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-16T14:00:00Z",
+      "home_team": "Chapecoense",
+      "away_team": "Bahia"
+    },
+    {
+      "id": "eda193f19bde1b5e6bca79107fdfcc4f",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-16T19:00:00Z",
+      "home_team": "Atletico Mineiro",
+      "away_team": "Grêmio"
+    },
+    {
+      "id": "006f25fb5068d9d8a51aac6a8179c789",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-16T19:00:00Z",
+      "home_team": "Vasco da Gama",
+      "away_team": "Santos"
+    },
+    {
+      "id": "f9d582a2aad2946d6941a6efc7e519f7",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-16T21:30:00Z",
+      "home_team": "Vitoria",
+      "away_team": "Botafogo"
+    },
+    {
+      "id": "5694b6f3539310601f64e1845bbdbd4b",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-16T21:30:00Z",
+      "home_team": "Mirassol",
+      "away_team": "Flamengo"
+    },
+    {
+      "id": "3d35899b69e82755f19f1ff7a1782694",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-16T22:30:00Z",
+      "home_team": "Corinthians",
+      "away_team": "Cruzeiro"
+    },
+    {
+      "id": "caa23e620c159aa3324822722689bd9a",
+      "sport_key": "soccer_brazil_campeonato",
+      "sport_title": "Brazil Série A",
+      "commence_time": "2026-08-17T23:00:00Z",
+      "home_team": "Internacional",
+      "away_team": "Remo"
+    }
+  ]
+}

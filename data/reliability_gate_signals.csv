@@ -1,0 +1,7 @@
+﻿fixture_id,competition,home,away,market,model_probability_pct,market_brier_skill_pct,market_ece_pct,bin_n,bin_prediction_pct,bin_actual_pct,bin_gap_pct,reliable,low_volatility,grade,block_reasons
+1492327,BSA,SE Palmeiras,SC Internacional,1X,82.18,12.13,4.8,60,84.26008549067814,86.66666666666667,2.4065811759885314,True,True,A,
+1575450,PPL,Gil Vicente FC,Rio Ave FC,1X,81.51,12.13,4.8,60,84.26008549067814,86.66666666666667,2.4065811759885314,True,True,A,
+1492320,BSA,EC Bahia,CR Vasco da Gama,1X,79.77,12.13,4.8,89,74.97587017398497,75.28089887640449,0.3050287024195186,True,True,A,
+1492322,BSA,RB Bragantino,SC Corinthians Paulista,1X,74.76,12.13,4.8,89,74.97587017398497,75.28089887640449,0.3050287024195186,True,True,A,
+1575452,PPL,Moreirense FC,Sporting Clube de Braga,AWAY_SCORES,73.07,5.3,1.19,93,74.78025915229479,75.26881720430107,0.4885580520062826,True,True,A,
+1575452,PPL,Moreirense FC,Sporting Clube de Braga,X2,73.74,12.79,5.78,39,74.14221938476253,74.35897435897436,0.2167549742118413,True,True,B,

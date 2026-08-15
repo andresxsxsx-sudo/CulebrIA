@@ -1,0 +1,7 @@
+﻿fixture_id,competition,sport_key,event_id,home,away,market,api_market,model_probability_pct,grade,commence_time,minutes_to_start,authorized,block_reasons
+1492327,BSA,soccer_brazil_campeonato,080179043efe768aaae54129824d42ac,SE Palmeiras,SC Internacional,1X,double_chance,82.18,A,2026-08-09T19:00:00Z,-169.0,False,STARTED
+1575450,PPL,soccer_portugal_primeira_liga,9e4982aee8921f2f7854b2fa9f69ac2a,Gil Vicente FC,Rio Ave FC,1X,double_chance,81.51,A,2026-08-09T19:30:00Z,-139.0,False,STARTED
+1492320,BSA,soccer_brazil_campeonato,4204e2b2947477d251548f1c02e632d3,EC Bahia,CR Vasco da Gama,1X,double_chance,79.77,A,2026-08-09T19:00:00Z,-169.0,False,STARTED
+1492322,BSA,soccer_brazil_campeonato,44d6d18dd7c62426e6e3a904acd3ae7c,RB Bragantino,SC Corinthians Paulista,1X,double_chance,74.76,A,2026-08-09T21:30:00Z,-19.0,False,STARTED
+1575452,PPL,soccer_portugal_primeira_liga,7bfe542ebd029ecc7c4a0ffc7a6fb292,Moreirense FC,Sporting Clube de Braga,AWAY_SCORES,team_totals,73.07,A,2026-08-09T19:30:00Z,-139.0,False,STARTED
+1575452,PPL,soccer_portugal_primeira_liga,7bfe542ebd029ecc7c4a0ffc7a6fb292,Moreirense FC,Sporting Clube de Braga,X2,,73.74,B,2026-08-09T19:30:00Z,-139.0,False,MARKET_BLOCKED | NO_API_MARKET | STARTED

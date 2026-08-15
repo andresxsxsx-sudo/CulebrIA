@@ -1,0 +1,7 @@
+﻿fixture_id,competition,event_id,home,away,market,grade,model_probability_pct,api_market,commence_time,minutes_to_start,status,reason,best_bookmaker,best_odds,model_fair_odds,break_even_pct,raw_edge_pp,raw_ev_pct,odds_last_update
+1492327,BSA,080179043efe768aaae54129824d42ac,SE Palmeiras,SC Internacional,1X,A,82.18,double_chance,2026-08-09T19:00:00Z,-119.4,STARTED,El evento ya comenzó. No se usarán cuotas live.,,,,,,,
+1575450,PPL,9e4982aee8921f2f7854b2fa9f69ac2a,Gil Vicente FC,Rio Ave FC,1X,A,81.51,double_chance,2026-08-09T19:30:00Z,-89.4,STARTED,El evento ya comenzó. No se usarán cuotas live.,,,,,,,
+1492320,BSA,4204e2b2947477d251548f1c02e632d3,EC Bahia,CR Vasco da Gama,1X,A,79.77,double_chance,2026-08-09T19:00:00Z,-119.4,STARTED,El evento ya comenzó. No se usarán cuotas live.,,,,,,,
+1492322,BSA,44d6d18dd7c62426e6e3a904acd3ae7c,RB Bragantino,SC Corinthians Paulista,1X,A,74.76,double_chance,2026-08-09T21:30:00Z,30.6,NO_BET_PRICE,La mejor cuota disponible no supera la cuota justa del modelo.,Pinnacle,1.33,1.338,75.19,-0.43,-0.57,2026-08-09T20:48:21Z
+1575452,PPL,7bfe542ebd029ecc7c4a0ffc7a6fb292,Moreirense FC,Sporting Clube de Braga,AWAY_SCORES,A,73.07,team_totals,2026-08-09T19:30:00Z,-89.4,STARTED,El evento ya comenzó. No se usarán cuotas live.,,,,,,,
+1575452,PPL,7bfe542ebd029ecc7c4a0ffc7a6fb292,Moreirense FC,Sporting Clube de Braga,X2,B,73.74,double_chance,2026-08-09T19:30:00Z,-89.4,STARTED,El evento ya comenzó. No se usarán cuotas live.,,,,,,,

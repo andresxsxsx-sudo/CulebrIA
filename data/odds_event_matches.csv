@@ -1,0 +1,7 @@
+﻿fixture_id,competition,sport_key,home,away,signal_market,model_probability_pct,grade,kickoff,event_id,odds_home,odds_away,odds_commence_time,similarity,orientation,time_difference_hours,match_status
+1492327,BSA,soccer_brazil_campeonato,SE Palmeiras,SC Internacional,1X,82.18,A,2026-08-09T19:00:00Z,080179043efe768aaae54129824d42ac,Palmeiras,Internacional,2026-08-09T19:00:00Z,1.0,NORMAL,0.0,MATCHED
+1575450,PPL,soccer_portugal_primeira_liga,Gil Vicente FC,Rio Ave FC,1X,81.51,A,2026-08-09T19:30:00Z,9e4982aee8921f2f7854b2fa9f69ac2a,Gil Vicente,Rio Ave FC,2026-08-09T19:30:00Z,1.0,NORMAL,0.0,MATCHED
+1492320,BSA,soccer_brazil_campeonato,EC Bahia,CR Vasco da Gama,1X,79.77,A,2026-08-09T19:00:00Z,4204e2b2947477d251548f1c02e632d3,Bahia,Vasco da Gama,2026-08-09T19:00:00Z,1.0,NORMAL,0.0,MATCHED
+1492322,BSA,soccer_brazil_campeonato,RB Bragantino,SC Corinthians Paulista,1X,74.76,A,2026-08-09T21:30:00Z,44d6d18dd7c62426e6e3a904acd3ae7c,Bragantino-SP,Corinthians,2026-08-09T21:30:00Z,0.98,NORMAL,0.0,MATCHED
+1575452,PPL,soccer_portugal_primeira_liga,Moreirense FC,Sporting Clube de Braga,AWAY_SCORES,73.07,A,2026-08-09T19:30:00Z,7bfe542ebd029ecc7c4a0ffc7a6fb292,Moreirense FC,Braga,2026-08-09T19:30:00Z,1.0,NORMAL,0.0,MATCHED
+1575452,PPL,soccer_portugal_primeira_liga,Moreirense FC,Sporting Clube de Braga,X2,73.74,B,2026-08-09T19:30:00Z,7bfe542ebd029ecc7c4a0ffc7a6fb292,Moreirense FC,Braga,2026-08-09T19:30:00Z,1.0,NORMAL,0.0,MATCHED
