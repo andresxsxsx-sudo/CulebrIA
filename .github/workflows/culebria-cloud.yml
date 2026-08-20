@@ -1,0 +1,35 @@
+﻿name: CulebrIA Cloud Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  football:
+    runs-on: ubuntu-latest
+
+    env:
+      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      FOOTBALL_DATA_ORG_KEY: ${{ secrets.FOOTBALL_DATA_ORG_KEY }}
+      THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+      PYTHONUTF8: "1"
+
+    steps:
+      - name: Descargar CulebrIA
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar CulebrIA fútbol
+        run: python -X utf8 culebria.py
+
+      - name: Confirmación fresca fútbol
+        run: python -X utf8 confirm_culebria_bet.py
