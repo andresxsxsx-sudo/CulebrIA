@@ -1,4 +1,4 @@
-﻿name: CulebrIA Cloud Test
+﻿name: CulebrIA Fútbol
 
 on:
   workflow_dispatch:
@@ -8,7 +8,9 @@ permissions:
 
 jobs:
   football:
+    name: CulebrIA Fútbol
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     env:
       API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
@@ -18,18 +20,136 @@ jobs:
 
     steps:
       - name: Descargar CulebrIA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Preparar Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
+      - name: Limpiar decisiones anteriores
+        shell: bash
+        run: |
+          rm -f data/culebria_operational_final.json
+          rm -f data/culebria_bet_confirmation.json
+          rm -f culebria-football.log
+          rm -f culebria-confirmation.log
+
       - name: Ejecutar CulebrIA fútbol
-        run: python -X utf8 culebria.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python -X utf8 culebria.py 2>&1 | tee culebria-football.log
 
       - name: Confirmación fresca fútbol
-        run: python -X utf8 confirm_culebria_bet.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python -X utf8 confirm_culebria_bet.py 2>&1 | tee culebria-confirmation.log
+
+      - name: Resultado CulebrIA
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          decision = Path("data/culebria_operational_final.json")
+          confirmation = Path("data/culebria_bet_confirmation.json")
+          football_log = Path("culebria-football.log")
+          summary = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          job_status = os.environ.get("JOB_STATUS", "").lower()
+
+          def pretty_json(path):
+              try:
+                  payload = json.loads(path.read_text(encoding="utf-8"))
+                  return json.dumps(payload, ensure_ascii=False, indent=2)
+              except Exception as exc:
+                  return f"No se pudo leer {path.name}: {exc}"
+
+          lines = ["## 🐍 CulebrIA Fútbol", ""]
+
+          if job_status != "success":
+              lines += [
+                  "### ❌ ERROR DE EJECUCIÓN",
+                  "",
+                  "CulebrIA no terminó correctamente. Abre el paso rojo para ver el error."
+              ]
+
+          elif confirmation.exists():
+              lines += [
+                  "### ✅ APUESTA CONFIRMADA",
+                  "",
+                  "La selección superó también la comprobación fresca final de cuotas.",
+                  "",
+                  "```json",
+                  pretty_json(confirmation),
+                  "```"
+              ]
+
+          elif decision.exists():
+              lines += [
+                  "### ⚠️ DECISIÓN GENERADA, PERO NO CONFIRMADA",
+                  "",
+                  "Existe una decisión operativa, pero no existe confirmación final.",
+                  "**NO APOSTAR** hasta que la confirmación sea válida.",
+                  "",
+                  "```json",
+                  pretty_json(decision),
+                  "```"
+              ]
+
+          else:
+              lines += ["### ⛔ NO BET", ""]
+
+              reason_lines = []
+
+              if football_log.exists():
+                  log_lines = football_log.read_text(
+                      encoding="utf-8",
+                      errors="replace"
+                  ).splitlines()
+
+                  for index, line in enumerate(log_lines):
+                      if "NO BET" not in line:
+                          continue
+
+                      for candidate in log_lines[index:index + 6]:
+                          text = candidate.strip()
+
+                          if not text:
+                              continue
+
+                          if set(text) <= {"=", "-"}:
+                              continue
+
+                          reason_lines.append(text)
+
+                          if len(reason_lines) == 3:
+                              break
+
+                      break
+
+              if reason_lines:
+                  lines += ["**Motivo detectado:**", ""]
+                  lines += [f"> {item}" for item in reason_lines]
+              else:
+                  lines.append("No se generó ninguna decisión operativa válida.")
+
+              lines += [
+                  "",
+                  "**Acción: NO APOSTAR.** CulebrIA mantiene sus filtros sin forzar una selección."
+              ]
+
+          summary.write_text(
+              "\n".join(lines) + "\n",
+              encoding="utf-8"
+          )
+          PY
