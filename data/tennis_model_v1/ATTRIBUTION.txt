@@ -1,0 +1,14 @@
+CulebrIA Tennis Model V1 — data attribution
+
+Historical ATP/WTA match data:
+Jeff Sackmann / Tennis Abstract.
+
+Archive used by this script:
+Aneeshers/tennis-sackmann-archive on Hugging Face.
+
+License of the historical dataset:
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY-NC-SA 4.0).
+
+This model script is intended for personal/research use.
+The historical dataset license requires attribution, non-commercial use,
+and ShareAlike for redistributed adaptations.

@@ -76,95 +76,188 @@ def _save_cache(cache_file, api_data):
 
 
 def get_today_fixtures(force_refresh=False):
-    """
-    Obtiene los partidos de hoy.
-
-    Si existe un caché de menos de 4 horas,
-    utiliza los datos locales y NO consume API.
-    """
+    # CulebrIA ahora analiza HOY + MAÑANA.
+    # Conservamos el nombre para no romper imports existentes.
 
     now = datetime.now(ZoneInfo(TIMEZONE))
-    today = now.strftime("%Y-%m-%d")
-
-    cache_file = _cache_file_for_date(today)
-
-    # -------------------------------------------------
-    # 1. INTENTAR USAR DATOS GUARDADOS
-    # -------------------------------------------------
-
-    if not force_refresh:
-        cached = _load_cache(cache_file)
-
-        if cached:
-            api_data = cached["api_data"]
-
-            return {
-                "date": today,
-                "fixtures": api_data.get("response", []),
-                "results": api_data.get("results", 0),
-                "paging": api_data.get("paging", {}),
-                "daily_limit": None,
-                "daily_remaining": None,
-                "source": "cache",
-                "fetched_at": cached["fetched_at"],
-            }
-
-    # -------------------------------------------------
-    # 2. SI NO HAY CACHÉ, CONSULTAR API
-    # -------------------------------------------------
-
     api_key = os.getenv("API_FOOTBALL_KEY")
-
-    if not api_key:
-        raise RuntimeError(
-            "No se encontró API_FOOTBALL_KEY en el archivo .env"
-        )
-
     url = f"{BASE_URL}/fixtures"
 
-    headers = {
-        "x-apisports-key": api_key
-    }
+    headers = None
+    combined_fixtures = []
+    seen_fixture_ids = set()
 
-    params = {
-        "date": today,
-        "timezone": TIMEZONE
-    }
+    sources = []
+    fetched_at_values = []
 
-    response = requests.get(
-        url,
-        headers=headers,
-        params=params,
-        timeout=20
-    )
+    daily_limit = None
+    daily_remaining = None
+    date_strings = []
 
-    daily_limit = response.headers.get(
-        "x-ratelimit-requests-limit"
-    )
+    for offset in range(2):
 
-    daily_remaining = response.headers.get(
-        "x-ratelimit-requests-remaining"
-    )
-
-    response.raise_for_status()
-
-    api_data = response.json()
-
-    if api_data.get("errors"):
-        raise RuntimeError(
-            f"API-Football devolvió un error: {api_data['errors']}"
+        target_date = (
+            now
+            + timedelta(days=offset)
         )
 
-    # Guardamos los datos localmente
-    _save_cache(cache_file, api_data)
+        date_string = target_date.strftime(
+            "%Y-%m-%d"
+        )
+
+        date_strings.append(
+            date_string
+        )
+
+        cache_file = _cache_file_for_date(
+            date_string
+        )
+
+        api_data = None
+
+        if not force_refresh:
+
+            cached = _load_cache(
+                cache_file
+            )
+
+            if cached:
+
+                api_data = cached[
+                    "api_data"
+                ]
+
+                sources.append(
+                    "cache"
+                )
+
+                fetched_at_values.append(
+                    cached.get(
+                        "fetched_at"
+                    )
+                )
+
+        if api_data is None:
+
+            if not api_key:
+                raise RuntimeError(
+                    "No se encontró API_FOOTBALL_KEY en el archivo .env"
+                )
+
+            if headers is None:
+                headers = {
+                    "x-apisports-key":
+                        api_key
+                }
+
+            params = {
+                "date":
+                    date_string,
+                "timezone":
+                    TIMEZONE,
+            }
+
+            response = requests.get(
+                url,
+                headers=headers,
+                params=params,
+                timeout=20,
+            )
+
+            daily_limit = (
+                response.headers.get(
+                    "x-ratelimit-requests-limit"
+                )
+            )
+
+            daily_remaining = (
+                response.headers.get(
+                    "x-ratelimit-requests-remaining"
+                )
+            )
+
+            response.raise_for_status()
+
+            api_data = response.json()
+
+            if api_data.get(
+                "errors"
+            ):
+                raise RuntimeError(
+                    "API-Football devolvió un error: "
+                    f"{api_data['errors']}"
+                )
+
+            _save_cache(
+                cache_file,
+                api_data,
+            )
+
+            sources.append(
+                "api"
+            )
+
+            fetched_at_values.append(
+                datetime.now(
+                    ZoneInfo(TIMEZONE)
+                ).isoformat()
+            )
+
+        for item in api_data.get(
+            "response",
+            [],
+        ):
+
+            fixture_id = (
+                item.get(
+                    "fixture",
+                    {}
+                ).get(
+                    "id"
+                )
+            )
+
+            if fixture_id is None:
+                continue
+
+            if fixture_id in seen_fixture_ids:
+                continue
+
+            seen_fixture_ids.add(
+                fixture_id
+            )
+
+            combined_fixtures.append(
+                item
+            )
+
+    source = (
+        "api"
+        if "api" in sources
+        else "cache"
+    )
 
     return {
-        "date": today,
-        "fixtures": api_data.get("response", []),
-        "results": api_data.get("results", 0),
-        "paging": api_data.get("paging", {}),
-        "daily_limit": daily_limit,
-        "daily_remaining": daily_remaining,
-        "source": "api",
-        "fetched_at": now.isoformat(),
+        "date":
+            " -> ".join(
+                date_strings
+            ),
+        "fixtures":
+            combined_fixtures,
+        "results":
+            len(
+                combined_fixtures
+            ),
+        "paging":
+            {},
+        "daily_limit":
+            daily_limit,
+        "daily_remaining":
+            daily_remaining,
+        "source":
+            source,
+        "fetched_at":
+            fetched_at_values[-1]
+            if fetched_at_values
+            else now.isoformat(),
     }

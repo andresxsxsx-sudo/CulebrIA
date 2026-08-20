@@ -356,6 +356,8 @@ def main():
         if (
             basic_sample_ok
             and
+            venue_sample_ok
+            and
             not has_leakage
         ):
 

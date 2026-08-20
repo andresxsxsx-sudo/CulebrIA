@@ -14,6 +14,10 @@ from src.analysis.prospective_tracker import (
     ensure_ledger,
 )
 
+from src.api.fdorg_local_history import (
+    load_competition_history,
+)
+
 
 # ============================================================
 # CONFIGURACIÓN
@@ -305,51 +309,24 @@ def parse_datetime(value):
 def load_competition_matches(
     competition
 ):
+    # Usa el loader centralizado para respetar api_data -> matches
+    # y combinar temporada actual + históricos disponibles.
 
-    file_path = (
-        FDORG_DIR
-        / f"{competition}_matches.json"
-    )
+    try:
 
-    if not file_path.exists():
+        history = (
+            load_competition_history(
+                competition
+            )
+        )
+
+    except RuntimeError:
 
         return []
 
-    with open(
-        file_path,
-        "r",
-        encoding="utf-8"
-    ) as file:
-
-        data = json.load(
-            file
-        )
-
-    if isinstance(
-        data,
-        list
-    ):
-
-        return data
-
-    if isinstance(
-        data,
-        dict
-    ):
-
-        matches = data.get(
-            "matches",
-            []
-        )
-
-        if isinstance(
-            matches,
-            list
-        ):
-
-            return matches
-
-    return []
+    return history[
+        "matches"
+    ]
 
 
 # ============================================================

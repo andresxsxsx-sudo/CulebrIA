@@ -196,6 +196,68 @@ def main():
         AUDIT_FILE
     )
 
+    # --------------------------------------------------------
+    # COMPROBAR QUE LA AUDITORÍA PERTENECE A LOS FIXTURES ACTUALES
+    # --------------------------------------------------------
+
+    required_audit_columns = {
+        "fixture_id",
+        "model_status",
+    }
+
+    missing_audit_columns = (
+        required_audit_columns
+        - set(audit_df.columns)
+    )
+
+    if missing_audit_columns:
+
+        raise RuntimeError(
+            "model_sample_audit.csv no tiene las columnas requeridas: "
+            + ", ".join(
+                sorted(
+                    missing_audit_columns
+                )
+            )
+        )
+
+    audit_df[
+        "fixture_id"
+    ] = audit_df[
+        "fixture_id"
+    ].astype(int)
+
+    verified_ids = set(
+        verified_df[
+            "fixture_id"
+        ].astype(int)
+    )
+
+    audited_ids = set(
+        audit_df[
+            "fixture_id"
+        ].astype(int)
+    )
+
+    if audited_ids != verified_ids:
+
+        missing_ids = sorted(
+            verified_ids
+            - audited_ids
+        )
+
+        extra_ids = sorted(
+            audited_ids
+            - verified_ids
+        )
+
+        raise RuntimeError(
+            "La auditoría histórica está desactualizada. "
+            "Ejecute audit_model_samples.py antes de continuar. "
+            f"Fixtures sin auditar: {missing_ids}. "
+            f"Fixtures ajenos a la ejecución actual: {extra_ids}."
+        )
+
     ready_ids = set(
         audit_df[
             audit_df[

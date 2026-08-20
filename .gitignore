@@ -3,3 +3,42 @@
 __pycache__/
 *.pyc
 data/*.db
+# ============================================================
+# CulebrIA - archivos locales/generados
+# ============================================================
+
+# Backups e instaladores temporales
+*.bak
+apply_*.py
+
+# Versiones antiguas / pruebas
+culebria_beta_use*.py
+culebria_extra_sports*.py
+
+# Cachés y datos que se regeneran
+data/beta_odds/
+data/extra_sports_odds/
+data/extra_sports_odds_v2/
+data/extra_sports_v3_cache/
+data/operational_odds/
+data/tennis_operational_cache/
+data/odds_raw/archive/
+
+# Fixtures diarios
+data/fixtures_*.json
+
+# Resultados diarios generados
+data/culebria_beta_*.csv
+data/culebria_beta_*.json
+data/culebria_extra_sports_*.json
+data/culebria_operational_candidates.csv
+data/culebria_daily_precision.json
+data/culebria_tennis_candidates*.csv
+data/culebria_tennis_parlays*.csv
+data/culebria_tennis_operational_v1.json
+
+# Auditorías/diagnósticos temporales
+data/extra_sports_positive_ev_pairs.csv
+data/extra_sports_threshold_audit.csv
+data/paid_odds_fetch_report.csv
+

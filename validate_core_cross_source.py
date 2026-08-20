@@ -225,11 +225,9 @@ def parse_datetime(value):
 # LOCALIZAR FIXTURES DEL DÍA
 # ============================================================
 
-def find_daily_fixture_file():
-    """
-    Busca el archivo fixtures_YYYY-MM-DD.json
-    más reciente.
-    """
+def find_daily_fixture_files():
+    # Devuelve todos los cachés disponibles.
+    # CulebrIA analiza hoy + mañana y necesita ambos días.
 
     files = sorted(
         DATA_DIR.glob(
@@ -243,7 +241,7 @@ def find_daily_fixture_file():
             "fixtures_YYYY-MM-DD.json"
         )
 
-    return files[-1]
+    return files
 
 
 # ============================================================
@@ -252,41 +250,60 @@ def find_daily_fixture_file():
 
 def load_api_football_fixtures():
 
-    file_path = (
-        find_daily_fixture_file()
-    )
+    fixture_index = {}
 
-    with open(
-        file_path,
-        "r",
-        encoding="utf-8"
-    ) as file:
+    for file_path in (
+        find_daily_fixture_files()
+    ):
 
-        cached = json.load(file)
+        try:
 
-    api_data = cached.get(
-        "api_data",
-        {}
-    )
+            with open(
+                file_path,
+                "r",
+                encoding="utf-8"
+            ) as file:
 
-    fixtures = api_data.get(
-        "response",
-        []
-    )
+                cached = json.load(
+                    file
+                )
 
-    return {
-        item.get(
-            "fixture",
+        except (
+            OSError,
+            json.JSONDecodeError,
+        ):
+
+            continue
+
+        api_data = cached.get(
+            "api_data",
             {}
-        ).get("id"): item
+        )
 
-        for item in fixtures
+        fixtures = api_data.get(
+            "response",
+            []
+        )
 
-        if item.get(
-            "fixture",
-            {}
-        ).get("id") is not None
-    }
+        for item in fixtures:
+
+            fixture_id = (
+                item.get(
+                    "fixture",
+                    {}
+                ).get(
+                    "id"
+                )
+            )
+
+            if fixture_id is None:
+                continue
+
+            fixture_index[
+                fixture_id
+            ] = item
+
+    return fixture_index
 
 
 # ============================================================

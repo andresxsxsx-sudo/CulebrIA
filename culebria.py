@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import json
 import subprocess
 import sys
 from datetime import datetime
@@ -7,8 +10,26 @@ import pandas as pd
 
 
 # ============================================================
-# CULEBRIA - CONTROLADOR DIARIO
+# CULEBRIA - CONTROLADOR OPERATIVO FINAL
 # ============================================================
+#
+# Flujo:
+#   1) obtiene partidos
+#   2) filtra calidad / CORE
+#   3) cruza y valida football-data.org
+#   4) audita muestra histórica
+#   5) genera Poisson V1 RAW
+#   6) aplica Reliability Gate
+#   7) confirma PREMATCH
+#   8) ejecuta culebria_operational.py
+#   9) liquida resultados prospectivos anteriores
+#
+# IMPORTANTE:
+# Ya NO ejecuta plan_paid_odds.py / fetch_authorized_odds.py /
+# build_value_candidates.py antes del modo operativo. De este modo
+# evitamos consultar cuotas dos veces en la misma ejecución.
+# ============================================================
+
 
 ROOT_DIR = Path(__file__).resolve().parent
 DATA_DIR = ROOT_DIR / "data"
@@ -16,810 +37,338 @@ DATA_DIR = ROOT_DIR / "data"
 POISSON_FILE = DATA_DIR / "poisson_predictions.csv"
 GATE_FILE = DATA_DIR / "reliability_gate_signals.csv"
 PREMATCH_FILE = DATA_DIR / "prematch_odds_candidates.csv"
-PLAN_FILE = DATA_DIR / "paid_odds_plan.csv"
-VALUE_FILE = DATA_DIR / "value_candidates.csv"
-LEDGER_FILE = (
+
+OPERATIONAL_FINAL_FILE = (
     DATA_DIR
-    / "prospective"
-    / "prospective_ledger.csv"
+    / "culebria_operational_final.json"
 )
 
-
-# ============================================================
-# FLUJO DIARIO
-# ============================================================
 
 STAGES = [
     (
         "1. Obtener y filtrar partidos",
         "main.py",
     ),
-
     (
         "2. Evaluar calidad de competiciones",
         "build_quality_candidates.py",
     ),
-
     (
         "3. Construir mercado CORE",
         "build_market_pool.py",
     ),
-
     (
         "4. Cruzar football-data.org",
         "cross_fdorg_core.py",
     ),
-
     (
         "5. Actualizar históricos",
         "download_fdorg_core_matches.py",
     ),
-
     (
         "6. Validar partidos entre fuentes",
         "validate_core_cross_source.py",
     ),
-
     (
-        "7. Construir estadísticas",
+        "7. Auditar muestra histórica",
+        "audit_model_samples.py",
+    ),
+    (
+        "8. Construir estadísticas",
         "build_team_stats.py",
     ),
-
     (
-        "8. Ejecutar Poisson V1 RAW",
+        "9. Ejecutar Poisson V1 RAW",
         "build_poisson_predictions.py",
     ),
-
     (
-        "9. Aplicar Reliability Gate",
+        "10. Aplicar Reliability Gate",
         "build_reliability_gate.py",
     ),
-
     (
-        "10. Localizar eventos de cuotas",
+        "11. Localizar eventos de cuotas",
         "match_odds_events.py",
     ),
-
     (
-        "11. Filtrar únicamente PREMATCH",
+        "12. Confirmar señales PREMATCH",
         "inspect_prematch_odds_candidates.py",
     ),
-
     (
-        "12. Planificar consultas de cuotas",
-        "plan_paid_odds.py",
+        "13. Decisión operativa cuota 1.80+",
+        "culebria_operational.py",
     ),
-
     (
-        "13. Consultar cuotas autorizadas",
-        "fetch_authorized_odds.py",
-    ),
-
-    (
-        "14. Evaluar valor",
-        "build_value_candidates.py",
-    ),
-
-    (
-        "15. Guardar snapshots prospectivos",
-        "build_prospective_snapshots.py",
-    ),
-
-    (
-        "16. Liquidar resultados disponibles",
+        "14. Liquidar resultados anteriores",
         "settle_prospective_ledger.py",
+    ),
+    (
+        "15. Liquidar parlays operativos",
+        "settle_operational_parlays.py",
     ),
 ]
 
 
-# ============================================================
-# EJECUTAR UN SCRIPT
-# ============================================================
-
-def run_script(
-    title,
-    script_name,
-):
-
-    script_path = (
-        ROOT_DIR
-        / script_name
-    )
+def run_script(title, script_name):
+    path = ROOT_DIR / script_name
 
     print()
-    print("=" * 90)
+    print("=" * 92)
+    print(title)
+    print("=" * 92)
 
-    print(
-        title
-    )
-
-    print("=" * 90)
-
-    if not script_path.exists():
-
-        print()
-        print(
-            "❌ No existe:"
-        )
-
-        print(
-            script_path
-        )
-
+    if not path.exists():
+        print(f"❌ No existe: {path}")
         return False
 
     result = subprocess.run(
         [
             sys.executable,
-            str(
-                script_path
-            ),
+            str(path),
         ],
-        cwd=str(
-            ROOT_DIR
-        ),
+        cwd=str(ROOT_DIR),
     )
 
     if result.returncode != 0:
-
         print()
-        print(
-            "❌ ERROR EN:"
-        )
-
-        print(
-            script_name
-        )
-
+        print(f"❌ ERROR EN: {script_name}")
         print(
             f"Código de salida: "
             f"{result.returncode}"
         )
-
         return False
 
+    # CULEBRIA_SAFE_NO_CORE_V1
+    if script_name == "cross_fdorg_core.py":
+        core_file = (
+            ROOT_DIR
+            / "data"
+            / "fdorg_core_matches.csv"
+        )
+
+        no_core_covered = True
+
+        try:
+            if (
+                core_file.exists()
+                and core_file.stat().st_size > 0
+            ):
+                core_check = pd.read_csv(core_file)
+                no_core_covered = core_check.empty
+        except (
+            pd.errors.EmptyDataError,
+            pd.errors.ParserError,
+            OSError,
+        ):
+            no_core_covered = True
+
+        if no_core_covered:
+            for stale_name in (
+                "culebria_operational_final.json",
+                "culebria_bet_confirmation.json",
+            ):
+                stale = (
+                    ROOT_DIR
+                    / "data"
+                    / stale_name
+                )
+                try:
+                    if stale.exists():
+                        stale.unlink()
+                except OSError:
+                    pass
+
+            print()
+            print("=" * 90)
+            print("⛔ NO BET — NO_CORE_COVERED")
+            print(
+                "Hoy no hay partidos CORE cubiertos "
+                "por la segunda fuente football-data.org."
+            )
+            print(
+                "No se bajan filtros y no se reutiliza "
+                "ninguna decisión anterior."
+            )
+            print("=" * 90)
+            raise SystemExit(0)
+
     print()
-    print(
-        "✅ Paso completado:"
-    )
-
-    print(
-        script_name
-    )
-
+    print(f"✅ Paso completado: {script_name}")
     return True
 
 
-# ============================================================
-# LEER CSV DE FORMA SEGURA
-# ============================================================
-
-def read_csv_safe(
-    path,
-):
-
-    if not path.exists():
-
-        return pd.DataFrame()
-
-    if path.stat().st_size == 0:
-
+def read_csv_safe(path):
+    if (
+        not path.exists()
+        or path.stat().st_size == 0
+    ):
         return pd.DataFrame()
 
     try:
-
-        return pd.read_csv(
-            path
-        )
-
+        return pd.read_csv(path)
     except (
         pd.errors.EmptyDataError,
         pd.errors.ParserError,
         OSError,
     ):
-
         return pd.DataFrame()
 
 
-# ============================================================
-# COMPROBAR SI UN CSV TIENE FILAS
-# ============================================================
-
-def csv_has_rows(
-    path,
-):
-
-    df = read_csv_safe(
-        path
-    )
-
-    return not df.empty
+def csv_has_rows(path):
+    return not read_csv_safe(path).empty
 
 
-# ============================================================
-# CONVERTIR BOOLEANO DESDE CSV
-# ============================================================
-
-def csv_boolean(
-    value,
-):
-
-    if isinstance(
-        value,
-        bool
-    ):
-
-        return value
-
-    return (
-        str(
-            value
-        )
-        .strip()
-        .lower()
-        in {
-            "true",
-            "1",
-            "yes",
-            "si",
-            "sí",
-        }
-    )
-
-
-# ============================================================
-# CONTAR CONSULTAS DE CUOTAS AUTORIZADAS
-# ============================================================
-
-def count_authorized_odds():
-
-    df = read_csv_safe(
-        PLAN_FILE
-    )
-
-    if (
-        df.empty
-        or
-        "authorized"
-        not in df.columns
-    ):
-
-        return 0
-
-    authorized = (
-        df[
-            "authorized"
-        ]
-        .apply(
-            csv_boolean
-        )
-    )
-
-    return int(
-        authorized.sum()
-    )
-
-
-# ============================================================
-# CONTAR CANDIDATOS CON EV BRUTO POSITIVO
-# ============================================================
-
-def count_positive_value_candidates():
-
-    df = read_csv_safe(
-        VALUE_FILE
-    )
-
-    if (
-        df.empty
-        or
-        "status"
-        not in df.columns
-    ):
-
-        return 0
-
-    statuses = (
-        df[
-            "status"
-        ]
-        .fillna(
-            ""
-        )
-        .astype(
-            str
-        )
-        .str.upper()
-    )
-
-    return int(
-        (
-            statuses
-            ==
-            "NEEDS_VIG_CHECK"
-        ).sum()
-    )
-
-
-# ============================================================
-# MOSTRAR NO BET
-# ============================================================
-
-def print_no_bet(
-    reason,
-    detail=None,
-):
-
+def print_no_bet(reason, detail=None):
     print()
+    print("=" * 92)
+    print("🐍 CULEBRIA - RESULTADO DEL DÍA")
+    print("=" * 92)
     print()
-
-    print("=" * 90)
-
-    print(
-        "🐍 CULEBRIA - RESULTADO DEL DÍA"
-    )
-
-    print("=" * 90)
-
+    print("⛔ NO BET")
     print()
-
-    print(
-        "⛔ NO BET"
-    )
-
-    print()
-
-    print(
-        f"Motivo: "
-        f"{reason}"
-    )
+    print(f"Motivo: {reason}")
 
     if detail:
-
-        print(
-            detail
-        )
+        print(detail)
 
     print()
-
     print(
         "CulebrIA no bajará sus criterios "
         "solo para generar una apuesta."
     )
-
     print(
-        "Parlay objetivo: exactamente "
-        "2 eventos de partidos distintos."
+        "Objetivo operativo: cuota 1.80+."
     )
+    print("=" * 92)
 
-    print(
-        "Cuota combinada mínima: 2.00"
-    )
 
-    print("=" * 90)
-
-
-# ============================================================
-# MOSTRAR ERROR DEL PIPELINE
-# ============================================================
-
-def print_pipeline_error(
-    script_name,
-):
-
-    print()
-    print("=" * 90)
-
-    print(
-        "❌ CULEBRIA DETENIDA"
-    )
-
-    print("=" * 90)
-
-    print()
-
-    print(
-        "El problema apareció en:"
-    )
-
-    print(
-        script_name
-    )
-
-    print()
-
-    print(
-        "No se ejecutarán los pasos "
-        "posteriores hasta corregirlo."
-    )
-
-
-# ============================================================
-# RESUMEN FINAL
-# ============================================================
-
-def final_summary():
-
-    plan_df = read_csv_safe(
-        PLAN_FILE
-    )
-
-    value_df = read_csv_safe(
-        VALUE_FILE
-    )
-
-    ledger_df = read_csv_safe(
-        LEDGER_FILE
-    )
-
-    # --------------------------------------------------------
-    # PLAN DE CUOTAS
-    # --------------------------------------------------------
-
-    signals = len(
-        plan_df
-    )
-
-    if (
-        not plan_df.empty
-        and
-        "authorized"
-        in plan_df.columns
-    ):
-
-        authorized_mask = (
-            plan_df[
-                "authorized"
-            ]
-            .apply(
-                csv_boolean
-            )
-        )
-
-        authorized_df = (
-            plan_df[
-                authorized_mask
-            ]
-            .copy()
-        )
-
-    else:
-
-        authorized_df = (
-            pd.DataFrame()
-        )
-
-    authorized = len(
-        authorized_df
-    )
-
-    if (
-        not authorized_df.empty
-        and
-        {
-            "event_id",
-            "api_market",
-        }.issubset(
-            authorized_df.columns
-        )
-    ):
-
-        unique_requests = (
-            authorized_df[
-                [
-                    "event_id",
-                    "api_market",
-                ]
-            ]
-            .drop_duplicates()
-            .shape[
-                0
-            ]
-        )
-
-    else:
-
-        unique_requests = 0
-
-    # --------------------------------------------------------
-    # VALUE ENGINE
-    # --------------------------------------------------------
-
-    if (
-        not value_df.empty
-        and
-        "status"
-        in value_df.columns
-    ):
-
-        statuses = (
-            value_df[
-                "status"
-            ]
-            .fillna(
-                ""
-            )
-            .astype(
-                str
-            )
-            .str.upper()
-        )
-
-        no_bet_price = int(
-            (
-                statuses
-                ==
-                "NO_BET_PRICE"
-            ).sum()
-        )
-
-        needs_vig = int(
-            (
-                statuses
-                ==
-                "NEEDS_VIG_CHECK"
-            ).sum()
-        )
-
-    else:
-
-        no_bet_price = 0
-        needs_vig = 0
-
-    # --------------------------------------------------------
-    # LEDGER
-    # --------------------------------------------------------
-
-    if (
-        not ledger_df.empty
-        and
-        "settled"
-        in ledger_df.columns
-    ):
-
-        settled_values = (
-            ledger_df[
-                "settled"
-            ]
-            .fillna(
-                "NO"
-            )
-            .astype(
-                str
-            )
-            .str.upper()
-        )
-
-        settled = int(
-            (
-                settled_values
-                ==
-                "YES"
-            ).sum()
-        )
-
-        pending = (
-            len(
-                ledger_df
-            )
-            -
-            settled
-        )
-
-    else:
-
-        settled = 0
-        pending = 0
-
-    # --------------------------------------------------------
-    # MOSTRAR
-    # --------------------------------------------------------
-
-    print()
-    print()
-
-    print("=" * 90)
-
-    print(
-        "🐍 CULEBRIA - RESULTADO DEL DÍA"
-    )
-
-    print("=" * 90)
-
-    print()
-
-    print(
-        "MODELO:"
-    )
-
-    print(
-        "Poisson V1 RAW + Reliability Gate V1"
-    )
-
-    print()
-
-    print(
-        "POLÍTICA:"
-    )
-
-    print(
-        "Mercados permitidos: "
-        "1X / AWAY_SCORES"
-    )
-
-    print(
-        "Parlay: exactamente "
-        "2 eventos de partidos distintos"
-    )
-
-    print(
-        "Cuota combinada mínima: 2.00"
-    )
-
-    print()
-
-    print("-" * 90)
-
-    print(
-        f"Señales para cuotas:       "
-        f"{signals}"
-    )
-
-    print(
-        f"Señales autorizadas:       "
-        f"{authorized}"
-    )
-
-    print(
-        f"Consultas necesarias:      "
-        f"{unique_requests}"
-    )
-
-    print()
-
-    print(
-        f"Evaluaciones de precio:    "
-        f"{len(value_df)}"
-    )
-
-    print(
-        f"NO BET por precio:         "
-        f"{no_bet_price}"
-    )
-
-    print(
-        f"Pendientes de vig:         "
-        f"{needs_vig}"
-    )
-
-    print()
-
-    print(
-        f"Snapshots prospectivos:    "
-        f"{len(ledger_df)}"
-    )
-
-    print(
-        f"Pendientes de resultado:   "
-        f"{pending}"
-    )
-
-    print(
-        f"Liquidados:                "
-        f"{settled}"
-    )
-
-    print("-" * 90)
-
-    print()
-
-    if needs_vig > 0:
-
-        print(
-            "🟡 HAY CANDIDATOS"
-        )
-
+def print_operational_summary():
+    if not OPERATIONAL_FINAL_FILE.exists():
         print()
-
         print(
-            "Existe al menos una señal "
-            "con EV bruto positivo."
+            "⚠️ No se encontró el archivo "
+            "de decisión operativa final."
+        )
+        return
+
+    try:
+        data = json.loads(
+            OPERATIONAL_FINAL_FILE.read_text(
+                encoding="utf-8"
+            )
+        )
+    except (
+        json.JSONDecodeError,
+        OSError,
+    ):
+        print()
+        print(
+            "⚠️ No se pudo leer la "
+            "decisión operativa final."
+        )
+        return
+
+    decision = str(
+        data.get(
+            "decision",
+            "UNKNOWN",
+        )
+    ).upper()
+
+    print()
+    print("=" * 92)
+    print("🐍 CULEBRIA - DECISIÓN OPERATIVA")
+    print("=" * 92)
+    print()
+
+    if decision == "PARLAY":
+        print("✅ APUESTA PROPUESTA")
+        print("Tipo: PARLAY")
+        print(
+            f"Casa: "
+            f"{data.get('bookmaker', '?')}"
+        )
+        print(
+            f"Cuota combinada: "
+            f"{data.get('combined_odds', '?')}"
         )
 
-        print(
-            "Todavía debe superar "
-            "la validación final de vig"
-        )
+        for index, leg in enumerate(
+            data.get(
+                "legs",
+                [],
+            ),
+            start=1,
+        ):
+            print()
+            print(
+                f"{index}. "
+                f"{leg.get('home', '?')} vs "
+                f"{leg.get('away', '?')}"
+            )
+            print(
+                f"   Apostar: "
+                f"{leg.get('selection', '?')}"
+            )
+            print(
+                f"   Cuota: "
+                f"{leg.get('odds', '?')}"
+            )
+            print(
+                f"   Prob. modelo: "
+                f"{leg.get('model_probability_pct', '?')}%"
+            )
+            print(
+                f"   Edge sin vig: "
+                f"{leg.get('novig_edge_pp', '?')} pp"
+            )
 
+    elif decision == "NO_BET":
+        print("⛔ NO BET")
+        print()
         print(
-            "antes de poder formar "
-            "un parlay aprobado."
+            "No se encontraron selecciones "
+            "aprobadas que alcanzaran la "
+            "política de cuota 1.80+."
         )
 
     else:
-
         print(
-            "⛔ NO BET"
-        )
-
-        print()
-
-        print(
-            "No existen actualmente "
-            "señales con precio suficiente"
-        )
-
-        print(
-            "para pasar a la "
-            "validación final."
+            "⚠️ Decisión operativa "
+            f"no reconocida: {decision}"
         )
 
     print()
+    print(
+        "⚠️ El modelo estadístico no "
+        "garantiza resultados ganadores."
+    )
+    print("=" * 92)
 
-    print("=" * 90)
-
-
-# ============================================================
-# PROGRAMA PRINCIPAL
-# ============================================================
 
 def main():
-
-    start_time = (
-        datetime.now()
-    )
+    start = datetime.now()
 
     print()
-    print("=" * 90)
-
-    print(
-        "🐍 CULEBRIA"
-    )
-
-    print(
-        "ANÁLISIS DIARIO"
-    )
-
-    print("=" * 90)
-
+    print("=" * 92)
+    print("🐍 CULEBRIA")
+    print("MODO OPERATIVO — UN SOLO COMANDO")
+    print("=" * 92)
     print()
-
     print(
         f"Inicio: "
-        f"{start_time.strftime('%Y-%m-%d %H:%M:%S')}"
+        f"{start.strftime('%Y-%m-%d %H:%M:%S')}"
     )
-
-    print()
-
     print(
-        "Modo: PRECISIÓN"
+        "Mercados: 1X / AWAY_SCORES"
     )
-
     print(
-        "Parlay: 2 eventos"
+        "Objetivo de cuota: 1.80+"
     )
-
     print(
-        "Cuota combinada mínima: 2.00"
+        "Si no hay valor suficiente: NO BET"
     )
 
-    print()
-
-    print(
-        "Si no existe valor suficiente:"
-    )
-
-    print(
-        "NO BET"
-    )
-
-    total_steps = len(
-        STAGES
-    )
-
-    # ========================================================
-    # EJECUTAR PIPELINE
-    # ========================================================
+    total = len(STAGES)
 
     for index, (
         title,
@@ -828,202 +377,82 @@ def main():
         STAGES,
         start=1,
     ):
-
-        full_title = (
-            f"[{index}/{total_steps}] "
-            f"{title}"
-        )
-
         success = run_script(
-            title=
-                full_title,
-
-            script_name=
-                script_name,
+            f"[{index}/{total}] {title}",
+            script_name,
         )
-
-        # ----------------------------------------------------
-        # ERROR REAL
-        # ----------------------------------------------------
 
         if not success:
-
-            print_pipeline_error(
-                script_name
+            print()
+            print("=" * 92)
+            print("❌ CULEBRIA DETENIDA")
+            print("=" * 92)
+            print(
+                f"El problema apareció en: "
+                f"{script_name}"
             )
-
             return
 
-        # ====================================================
-        # CORTE 1
-        #
-        # POISSON NO GENERÓ PREDICCIONES
-        # ====================================================
+        # ----------------------------------------------------
+        # CORTES SEGUROS ANTES DE CONSULTAR CUOTAS
+        # ----------------------------------------------------
 
         if (
             script_name
-            ==
-            "build_poisson_predictions.py"
-        ):
-
-            if not csv_has_rows(
+            == "build_poisson_predictions.py"
+            and not csv_has_rows(
                 POISSON_FILE
-            ):
-
-                print_no_bet(
-                    (
-                        "No existen partidos "
-                        "con muestra histórica "
-                        "suficiente."
-                    ),
-
-                    (
-                        "Poisson generó 0 predicciones. "
-                        "No se ejecutará Reliability Gate "
-                        "ni se consultarán cuotas."
-                    ),
-                )
-
-                return
-
-        # ====================================================
-        # CORTE 2
-        #
-        # NINGUNA PREDICCIÓN SUPERA EL GATE
-        # ====================================================
+            )
+        ):
+            print_no_bet(
+                "Poisson generó 0 predicciones.",
+                (
+                    "No hay partidos con muestra "
+                    "histórica suficiente."
+                ),
+            )
+            return
 
         if (
             script_name
-            ==
-            "build_reliability_gate.py"
-        ):
-
-            if not csv_has_rows(
+            == "build_reliability_gate.py"
+            and not csv_has_rows(
                 GATE_FILE
-            ):
-
-                print_no_bet(
-                    (
-                        "Ninguna predicción superó "
-                        "el Reliability Gate."
-                    ),
-
-                    (
-                        "No se consultarán cuotas."
-                    ),
+            )
+        ):
+            print_no_bet(
+                (
+                    "Ninguna predicción superó "
+                    "el Reliability Gate."
                 )
-
-                return
-
-        # ====================================================
-        # CORTE 3
-        #
-        # NO EXISTEN SEÑALES PREMATCH
-        # ====================================================
+            )
+            return
 
         if (
             script_name
-            ==
-            "inspect_prematch_odds_candidates.py"
-        ):
-
-            if not csv_has_rows(
+            == "inspect_prematch_odds_candidates.py"
+            and not csv_has_rows(
                 PREMATCH_FILE
-            ):
-
-                print_no_bet(
-                    (
-                        "No existen señales válidas "
-                        "PREMATCH en este momento."
-                    ),
-
-                    (
-                        "No se consultarán cuotas."
-                    ),
-                )
-
-                return
-
-        # ====================================================
-        # CORTE 4
-        #
-        # NO EXISTEN CONSULTAS DE CUOTAS AUTORIZADAS
-        # ====================================================
-
-        if (
-            script_name
-            ==
-            "plan_paid_odds.py"
-        ):
-
-            authorized_count = (
-                count_authorized_odds()
             )
-
-            if authorized_count == 0:
-
-                print_no_bet(
-                    (
-                        "No existe ninguna consulta "
-                        "de cuotas autorizada."
-                    ),
-
-                    (
-                        "Las señales fueron bloqueadas "
-                        "por las reglas operativas "
-                        "o los partidos ya no eran "
-                        "válidos para análisis PREMATCH."
-                    ),
-                )
-
-                return
-
-        # ====================================================
-        # VALUE ENGINE
-        #
-        # Si no hay EV bruto positivo, NO cortamos todavía.
-        # Queremos permitir que el Prospective Tracker guarde
-        # NO_BET_PRICE cuando corresponda.
-        # ====================================================
-
-        if (
-            script_name
-            ==
-            "build_value_candidates.py"
         ):
-
-            positive_candidates = (
-                count_positive_value_candidates()
+            print_no_bet(
+                (
+                    "No existen señales PREMATCH "
+                    "válidas en este momento."
+                )
             )
+            return
 
-            if positive_candidates == 0:
+    print_operational_summary()
 
-                pass
-
-    # ========================================================
-    # TODOS LOS PASOS TERMINARON
-    # ========================================================
-
-    final_summary()
-
-    end_time = (
-        datetime.now()
-    )
-
-    elapsed = (
-        end_time
-        -
-        start_time
-    )
+    end = datetime.now()
 
     print()
-
     print(
         f"Tiempo total: "
-        f"{elapsed}"
+        f"{end - start}"
     )
 
 
 if __name__ == "__main__":
-
     main()
