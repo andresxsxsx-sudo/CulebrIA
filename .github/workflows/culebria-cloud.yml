@@ -118,7 +118,7 @@ jobs:
                   ).splitlines()
 
                   for index, line in enumerate(log_lines):
-                      if "NO BET" not in line:
+                      if "NO BET —" not in line and "NO BET -" not in line:
                           continue
 
                       for candidate in log_lines[index:index + 6]:
@@ -153,3 +153,4 @@ jobs:
               encoding="utf-8"
           )
           PY
+
